@@ -1,35 +1,689 @@
+
 <!DOCTYPE html>
 <html lang="id">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profil Mahasiswa</title>
+  <title>Profil Mahasiswa | Yuni Kara</title>
+
   <style>
-    body {font-family: Arial, sans-serif; background:#eef2f7; margin:0; color:#1e293b}
-    header {background:#164e63; color:white; text-align:center; padding:28px}
-    main {max-width:760px; margin:24px auto; background:white; padding:24px; border-radius:12px}
-    h2 {color:#0e7490}
-    footer {text-align:center; padding:16px}
+    :root {
+      --pink: #e99ab5;
+      --pink-dark: #a94d72;
+      --pink-soft: #fbe4ed;
+      --pink-pale: #fff8fb;
+      --text: #5d4b55;
+      --muted: #8d7b85;
+      --white: #ffffff;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background: linear-gradient(135deg, #fff8fb, #fcecf2, #fffafd);
+      min-height: 100vh;
+    }
+
+    /* NAVIGASI */
+    .navbar {
+      width: min(1180px, calc(100% - 40px));
+      margin: 18px auto 0;
+      padding: 17px 26px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      border: 1px solid #f3d5e0;
+      border-radius: 22px;
+      background: rgba(255, 255, 255, 0.88);
+      box-shadow: 0 8px 25px rgba(169, 77, 114, 0.07);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--pink-dark);
+    }
+
+    .brand-icon {
+      font-size: 32px;
+      color: var(--pink);
+    }
+
+    .brand strong {
+      display: block;
+      font-family: Georgia, serif;
+      font-size: 24px;
+    }
+
+    .brand small {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--pink-dark);
+      padding: 10px 14px;
+      border-radius: 25px;
+      font-size: 14px;
+      font-weight: 600;
+      transition: 0.3s;
+    }
+
+    .nav-links a:hover {
+      background: var(--pink-soft);
+    }
+
+    /* BAGIAN PROFIL */
+    .hero {
+      position: relative;
+      overflow: hidden;
+      text-align: center;
+      padding: 38px 20px 48px;
+    }
+
+    .hero::before,
+    .hero::after {
+      position: absolute;
+      z-index: -1;
+      color: #f2cad8;
+      opacity: 0.65;
+      font-size: 145px;
+      pointer-events: none;
+    }
+
+    .hero::before {
+      content: "♡";
+      top: 110px;
+      left: 6%;
+      transform: rotate(-15deg);
+    }
+
+    .hero::after {
+      content: "♡";
+      top: 155px;
+      right: 6%;
+      transform: rotate(15deg);
+    }
+
+    .foto-wrapper {
+      width: 310px;
+      height: 310px;
+      padding: 8px;
+      margin: 0 auto 22px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #f3bfd1, #ffffff, #dfa0b9);
+      border: 1px solid #f0c6d6;
+      box-shadow: 0 12px 35px rgba(169, 77, 114, 0.16);
+    }
+
+    .foto-wrapper img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 40%;
+      border: 5px solid white;
+      border-radius: 50%;
+      background: #fbe4ed;
+      transition: transform 0.3s;
+    }
+
+    .foto-wrapper:hover img {
+      transform: scale(1.025);
+    }
+
+    .hero h1 {
+      color: var(--pink-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(42px, 6vw, 60px);
+      margin-bottom: 12px;
+    }
+
+    .jurusan {
+      display: inline-block;
+      background: #fbe4ed;
+      color: #a94d72;
+      padding: 11px 22px;
+      border-radius: 30px;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+    .hiasan {
+      color: #d68aa7;
+      margin: 8px 0 12px;
+      font-size: 20px;
+    }
+
+    .intro {
+      max-width: 610px;
+      margin: 0 auto;
+      color: var(--muted);
+      line-height: 1.9;
+      font-size: 15px;
+    }
+
+    #inputFoto {
+      display: none;
+    }
+
+    .tombol-foto {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 13px 25px;
+      border-radius: 30px;
+      background: linear-gradient(135deg, #d98ba8, #bd6688);
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      cursor: pointer;
+      box-shadow: 0 6px 18px rgba(169, 77, 114, 0.16);
+      transition: 0.3s;
+    }
+
+    .tombol-foto:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 22px rgba(169, 77, 114, 0.23);
+    }
+
+    #pesan {
+      min-height: 20px;
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    /* KONTEN */
+    .content {
+      width: min(1050px, calc(100% - 40px));
+      margin: 0 auto 35px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .info-card {
+      display: grid;
+      grid-template-columns: 75px minmax(0, 1fr);
+      gap: 22px;
+      padding: 30px;
+      border: 1px solid #f1d8e2;
+      border-radius: 23px;
+      background: rgba(255, 255, 255, 0.92);
+      box-shadow: 0 8px 24px rgba(169, 77, 114, 0.06);
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+
+    .info-card:hover {
+      box-shadow: 0 12px 28px rgba(169, 77, 114, 0.10);
+    }
+
+    .section-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 68px;
+      height: 68px;
+      border-radius: 21px;
+      background: #fbe4ed;
+      font-size: 30px;
+    }
+
+    .info-card h2 {
+      color: var(--pink-dark);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 29px;
+      margin-bottom: 13px;
+    }
+
+    .info-card p {
+      font-size: 15px;
+      line-height: 1.9;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 15px;
+    }
+
+    .info-item {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 19px;
+      border: 1px solid #f2dce5;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #fff8fb, #fdf0f5);
+      transition: 0.3s;
+    }
+
+    .info-item:hover {
+      border-color: #e9b3c8;
+      transform: translateY(-3px);
+    }
+
+    .symbol {
+      flex-shrink: 0;
+      width: 43px;
+      height: 43px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 13px;
+      background: #f7dce7;
+      font-size: 22px;
+    }
+
+    .info-item small {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .info-item strong {
+      display: block;
+      color: #75435a;
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    .phone-link {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .phone-link:hover {
+      color: var(--pink-dark);
+      text-decoration: underline;
+    }
+
+    .goal-card {
+      padding: 23px;
+      border: 1px solid #f0cbd9;
+      border-radius: 17px;
+      background: linear-gradient(135deg, #fff7fa, #fce9f1);
+    }
+
+    .goal-card strong {
+      color: var(--pink-dark);
+    }
+
+    /* FOOTER */
+    footer {
+      margin-top: 40px;
+      padding: 28px 20px;
+      background: linear-gradient(135deg, #f4d3df, #f9e6ed);
+      border-top: 1px solid #ecc4d4;
+      color: #82556a;
+      text-align: center;
+      font-size: 13px;
+      line-height: 1.9;
+    }
+
+    footer strong {
+      color: #9f4569;
+    }
+
+    @media (max-width: 700px) {
+      .navbar {
+        width: calc(100% - 24px);
+        justify-content: center;
+        text-align: center;
+        padding: 18px 12px;
+      }
+
+      .brand {
+        justify-content: center;
+      }
+
+      .nav-links {
+        justify-content: center;
+        gap: 2px;
+      }
+
+      .nav-links a {
+        padding: 9px 10px;
+        font-size: 13px;
+      }
+
+      .hero {
+        padding: 30px 18px 35px;
+      }
+
+      .foto-wrapper {
+        width: min(280px, 70vw);
+        height: min(280px, 70vw);
+      }
+
+      .hero::before {
+        left: -45px;
+      }
+
+      .hero::after {
+        right: -45px;
+      }
+
+      .content {
+        width: calc(100% - 24px);
+        gap: 14px;
+      }
+
+      .info-card {
+        grid-template-columns: 1fr;
+        gap: 15px;
+        padding: 22px;
+      }
+
+      .section-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 17px;
+        font-size: 25px;
+      }
+
+      .info-card h2 {
+        font-size: 25px;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <header>
-    <h1>Website Profil Mahasiswa</h1>
-    <p>Praktik Administrasi Website</p>
+
+  <header class="navbar">
+    <div class="brand">
+      <span class="brand-icon">♡</span>
+      <div>
+        <strong>Yuni Kara</strong>
+        <small>Website Profil Mahasiswa</small>
+      </div>
+    </div>
+
+    <nav class="nav-links" aria-label="Navigasi utama">
+      <a href="#beranda">Beranda</a>
+      <a href="#profil">Profil</a>
+      <a href="#informasi">Informasi</a>
+      <a href="#tujuan">Tujuan</a>
+    </nav>
   </header>
-  <main>
-    <h2>Profil Singkat</h2>
-    <img src="foto-saya.jpeg" alt="foto profil" widht="5"
-    <p>Halo, saya [Yuni kara]. Saya sedang belajar memublikasikan website.</p>
-    <h2>Informasi</h2>
-    <ul>
-      <li>Program Studi: Informatika</li>
-      <li>Mata Kuliah: Administrasi Website</li>
-      <li>Topik: Hosting dan publikasi website</li>
-    </ul>
-    <h2>Tujuan</h2>
-    <p>Halaman ini dibuat sebagai latihan mengunggah HTML ke layanan hosting.</p>
+
+  <section class="hero" id="beranda">
+
+    <div class="foto-wrapper">
+      <img
+        id="previewFoto"
+        src="foto-saya.jpeg"
+        alt="Foto profil Yuni Kara"
+      >
+    </div>
+
+    <h1>Yuni Kara</h1>
+
+    <div class="jurusan">
+      ♡ Mahasiswa Program Studi Informatika
+    </div>
+
+    <div class="hiasan">♡ ───────── ♥ ───────── ♡</div>
+
+    <p class="intro">
+      Selamat datang di halaman profil saya.
+      Mari mengenal saya lebih dekat dan melihat perjalanan saya
+      dalam mempelajari dunia teknologi.
+    </p>
+
+    <input type="file" id="inputFoto" accept="image/*">
+
+    <label for="inputFoto" class="tombol-foto">
+      📷 Pilih Foto Profil
+    </label>
+
+    <p id="pesan" role="status" aria-live="polite">
+      Pilih foto dari galeri HP atau komputer.
+    </p>
+
+  </section>
+
+  <main class="content">
+
+    <section class="info-card" id="profil">
+      <div class="section-icon">🌸</div>
+
+      <div>
+        <h2>Profil Singkat</h2>
+
+        <p>
+          Halo, saya <strong>Yuni Kara</strong>, mahasiswa Program Studi
+          Informatika. Saya bisa di panggil yuni, saya anak pertama dari
+          2 bersaudara. Hobi saya bermain bulu tangkis, bermain gitar,
+          dan melukis. Umur saya sekarang 20 tahun. Salam kenal semuanya.
+          Saat ini kesibukan saya menjadi konten kreator.
+          Melalui kegiatan pembelajaran ini, saya ingin meningkatkan
+          keterampilan dalam membuat, mengelola, dan memublikasikan website
+          agar dapat memberikan manfaat bagi banyak orang.
+        </p>
+      </div>
+    </section>
+
+    <section class="info-card" id="informasi">
+      <div class="section-icon">🎀</div>
+
+      <div>
+        <h2>Informasi Mahasiswa</h2>
+
+        <div class="info-grid">
+
+          <div class="info-item">
+            <span class="symbol">👩🏻‍🎓</span>
+            <div>
+              <small>Nama Lengkap</small>
+              <strong>Yuni Kara</strong>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <span class="symbol">🎓</span>
+            <div>
+              <small>Program Studi</small>
+              <strong>Informatika</strong>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <span class="symbol">📚</span>
+            <div>
+              <small>Mata Kuliah</small>
+              <strong>Administrasi Website</strong>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <span class="symbol">💻</span>
+            <div>
+              <small>Topik Pembelajaran</small>
+              <strong>Hosting dan Publikasi Website</strong>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <span class="symbol">📍</span>
+            <div>
+              <small>Alamat</small>
+              <strong>Kandoa, Desa Puty, Kabupaten Luwu</strong>
+            </div>
+          </div>
+
+          <div class="info-item">
+            <span class="symbol">📞</span>
+            <div>
+              <small>Nomor Telepon</small>
+              <strong>
+                <a class="phone-link" href="tel:082193107565">
+                  0821-9310-7565
+                </a>
+              </strong>
+            </div>
+          </div>
+
+          <!-- TAMBAHAN TANGGAL LAHIR -->
+          <div class="info-item">
+            <span class="symbol">🎂</span>
+            <div>
+              <small>Tanggal Lahir</small>
+              <strong>22 Januari 2006</strong>
+            </div>
+          </div>
+
+          <!-- TAMBAHAN INSTAGRAM -->
+          <div class="info-item">
+            <span class="symbol">📷</span>
+            <div>
+              <small>Instagram</small>
+              <strong>
+                <a
+                  class="phone-link"
+                  href="https://www.instagram.com/yuniikaraa_/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >@yuniikaraa_</a>
+              </strong>
+            </div>
+          </div>
+
+          <!-- TAMBAHAN TIKTOK -->
+          <div class="info-item">
+            <span class="symbol">🎵</span>
+            <div>
+              <small>TikTok</small>
+              <strong>
+                <a
+                  class="phone-link"
+                  href="https://www.tiktok.com/@yuniikaraa"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >@yuniikaraa</a>
+              </strong>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <section class="info-card" id="tujuan">
+      <div class="section-icon">💗</div>
+
+      <div>
+        <h2>Tujuan Pembuatan Website</h2>
+
+        <div class="goal-card">
+          <p>
+            Halaman ini dibuat sebagai latihan mengunggah HTML ke layanan
+            hosting. Website ini juga menjadi sarana pembelajaran untuk
+            memahami proses pembuatan, pengelolaan, dan publikasi website
+            agar dapat diakses melalui internet.
+          </p>
+        </div>
+      </div>
+    </section>
+
   </main>
-  <footer>Website latihan mahasiswa — 2026</footer>
+
+  <footer>
+    <p>♡ © 2026 <strong>Yuni Kara</strong> ♡</p>
+    <p>Website Profil Mahasiswa · Praktik Administrasi Website</p>
+  </footer>
+
+  <script>
+    const inputFoto = document.getElementById("inputFoto");
+    const previewFoto = document.getElementById("previewFoto");
+    const pesan = document.getElementById("pesan");
+
+    let urlFotoSebelumnya = null;
+
+    inputFoto.addEventListener("change", function () {
+      const file = this.files[0];
+
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        pesan.textContent = "Silakan pilih file gambar yang valid.";
+        pesan.style.color = "#b4235a";
+        this.value = "";
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        pesan.textContent = "Ukuran foto maksimal 10 MB.";
+        pesan.style.color = "#b4235a";
+        this.value = "";
+        return;
+      }
+
+      const urlBaru = URL.createObjectURL(file);
+      const urlLama = urlFotoSebelumnya;
+
+      previewFoto.onload = function () {
+        if (urlLama) {
+          URL.revokeObjectURL(urlLama);
+        }
+      };
+
+      urlFotoSebelumnya = urlBaru;
+      previewFoto.src = urlBaru;
+
+      pesan.textContent = "♡ Foto berhasil dipilih!";
+      pesan.style.color = "#9f2858";
+
+      this.value = "";
+    });
+
+    previewFoto.addEventListener("error", function () {
+      pesan.textContent =
+        "Foto tidak ditemukan. Pastikan foto-saya.jpeg berada satu folder dengan index.html.";
+      pesan.style.color = "#b4235a";
+    });
+
+    window.addEventListener("beforeunload", function () {
+      if (urlFotoSebelumnya) {
+        URL.revokeObjectURL(urlFotoSebelumnya);
+      }
+    });
+  </script>
+
 </body>
 </html>
